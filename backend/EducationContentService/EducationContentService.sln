@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationContentService.Core", "EducationContentService.Core\EducationContentService.Core.csproj", "{C0026480-B12C-4AF8-8FB2-0903C57D760B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationContentService.Domain", "EducationContentService.Domain\EducationContentService.Domain.csproj", "{59296C33-0639-43D5-A511-6BC079BA7604}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EducationContentService.Infrastructure.Postgres", "EducationContentService.Infrastructure.Postgres\EducationContentService.Infrastructure.Postgres.csproj", "{C74C66E6-1F33-4B7E-8081-D1FDA501D22A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C0026480-B12C-4AF8-8FB2-0903C57D760B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0026480-B12C-4AF8-8FB2-0903C57D760B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0026480-B12C-4AF8-8FB2-0903C57D760B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0026480-B12C-4AF8-8FB2-0903C57D760B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59296C33-0639-43D5-A511-6BC079BA7604}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59296C33-0639-43D5-A511-6BC079BA7604}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59296C33-0639-43D5-A511-6BC079BA7604}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59296C33-0639-43D5-A511-6BC079BA7604}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C74C66E6-1F33-4B7E-8081-D1FDA501D22A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C74C66E6-1F33-4B7E-8081-D1FDA501D22A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C74C66E6-1F33-4B7E-8081-D1FDA501D22A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C74C66E6-1F33-4B7E-8081-D1FDA501D22A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
