@@ -10,4 +10,8 @@
       <ProjectReference Include="..\EducationContentService.Core\EducationContentService.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    </ItemGroup>
+
 </Project>
