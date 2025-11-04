@@ -1,4 +1,6 @@
-﻿namespace EducationContentService.Core.EndpointsSettings;
+﻿using Microsoft.AspNetCore.Routing;
+
+namespace EducationContentService.Core;
 
 public interface IEndpoint
 {

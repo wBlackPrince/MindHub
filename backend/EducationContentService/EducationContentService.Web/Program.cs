@@ -1,5 +1,5 @@
 using System.Globalization;
-using EducationContentService.Core.Configuration;
+using EducationContentService.Web.Configuration;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -13,6 +13,11 @@ try
 
     WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+    string environment = builder.Environment.EnvironmentName;
+
+    builder.Configuration.AddJsonFile($"appsettings.{environment}.json", true, true);
+
+    builder.Configuration.AddEnvironmentVariables();
     builder.Services.AddConfiguration(builder.Configuration);
 
     WebApplication app = builder.Build();
