@@ -5,6 +5,7 @@ using EducationContentService.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using Index = EducationContentService.Infrastructure.Postgres.Configurations.Index;
 
 namespace EducationContentService.Infrastructure.Postgres;
 
@@ -25,7 +26,7 @@ public class LessonsRepository(
         catch (DbUpdateException ex) when(ex.InnerException is PostgresException pgEx)
         {
             if (pgEx is { SqlState: PostgresErrorCodes.UniqueViolation, ConstraintName: not null }
-                && pgEx.ConstraintName.Contains("title", StringComparison.InvariantCultureIgnoreCase))
+                && pgEx.ConstraintName.Contains(Index.TITLE, StringComparison.InvariantCultureIgnoreCase))
             {
                 return EducationErrors.TitleConflict(lesson.Title.Value);
             }

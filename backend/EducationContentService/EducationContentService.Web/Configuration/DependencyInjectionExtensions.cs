@@ -1,5 +1,6 @@
 ﻿using EducationContentService.Core;
-using EducationContentService.Core.Features.Lessons;
+using EducationContentService.Core.Endpoints;
+using EducationContentService.Infrastructure.Postgres;
 using EducationContentService.Web.EndpointSettings;
 using Microsoft.OpenApi.Models;
 using Serilog;
@@ -12,10 +13,11 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services
+            .AddCore(configuration)
+            .AddInfrastructurePostgres(configuration)
             .AddSerialLogging(configuration)
             .AddOpenApiSpec()
-            .AddEndpoints(typeof(IEndpoint).Assembly)
-            .AddScoped<CreateHandler>();
+            .AddEndpoints(typeof(IEndpoint).Assembly);
 
         return services;
     }
@@ -41,7 +43,9 @@ public static class DependencyInjectionExtensions
         return services;
     }
 
-    private static IServiceCollection AddSerialLogging(this IServiceCollection services, IConfiguration configuration)
+    private static IServiceCollection AddSerialLogging(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddSerilog((services, lc) => lc
             .ReadFrom.Configuration(configuration)

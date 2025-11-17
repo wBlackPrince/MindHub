@@ -7,15 +7,16 @@ namespace EducationContentService.Infrastructure.Postgres;
 
 public class EducationDbContext: DbContext
 {
-    public EducationDbContext(DbContextOptions<EducationDbContext> options) : base(options)
+    public EducationDbContext(DbContextOptions<EducationDbContext> options)
+        : base(options)
     {
     }
 
     public DbSet<Lesson> Lessons => Set<Lesson>();
 
-    public DbSet<Module> Modules => Set<Module>();
+    // public DbSet<Module> Modules => Set<Module>();
 
-    public DbSet<ModuleItem> ModuleItems => Set<ModuleItem>();
+    // public DbSet<ModuleItem> ModuleItems => Set<ModuleItem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

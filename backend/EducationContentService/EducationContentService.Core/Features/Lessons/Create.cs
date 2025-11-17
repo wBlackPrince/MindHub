@@ -1,52 +1,70 @@
 ﻿using CSharpFunctionalExtensions;
+using EducationContentService.Core.Endpoints;
+using EducationContentService.Core.Validation;
+using EducationContentService.Domain.Exceptions;
 using EducationContentService.Domain.Lessons;
 using EducationContentService.Domain.Shared;
 using EducationContentService.Domain.ValueObjects;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using IResult = Microsoft.AspNetCore.Http.IResult;
 
 namespace EducationContentService.Core.Features.Lessons;
 
 public record CreateLessonRequest(string Title, string Description);
 
+public class CreateLessonRequestValidator : AbstractValidator<CreateLessonRequest>
+{
+    public CreateLessonRequestValidator()
+    {
+        RuleFor(x => x.Title)
+            .MustBeValueObject(Title.Create);
+
+        RuleFor(x => x.Title)
+            .MustBeValueObject(Description.Create);
+    }
+}
+
 public sealed class CreateEndpoint: IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("lessons", async (
+        app.MapPost("lessons", async Task<EndpointResult<Guid>>(
             [FromBody] CreateLessonRequest request,
-            CreateHandler handler,
-            CancellationToken cancellationToken) =>
-        {
-            await handler.Handle(request, cancellationToken);
-        });
+            [FromServices] CreateHandler handler,
+            CancellationToken cancellationToken) => await handler.Handle(request, cancellationToken));
     }
 }
 
 public sealed class CreateHandler(
     ILogger<CreateHandler> logger,
-    ILessonsRepository lessonsRepository)
+    ILessonsRepository lessonsRepository,
+    IValidator<CreateLessonRequest> requestValidator)
 {
     public async Task<Result<Guid, Error>> Handle(
         CreateLessonRequest request,
         CancellationToken cancellationToken)
     {
-        Result<Title, Error> titleResult = Title.Create(request.Title);
+        ValidationResult validationResult = await requestValidator.ValidateAsync(request, cancellationToken);
 
-        if (titleResult.IsFailure)
-            return titleResult.Error;
+        if (!validationResult.IsValid)
+        {
+            return validationResult.ToError();
+        }
 
-        Result<Description, Error> descriptionResult = Description.Create(request.Description);
+        Title title = Title.Create(request.Title).Value;
 
-        if (descriptionResult.IsFailure)
-            return descriptionResult.Error;
+        Description description = Description.Create(request.Description).Value;
 
         Lesson lesson = new Lesson(
             Guid.NewGuid(),
-            titleResult.Value,
-            descriptionResult.Value);
+            title,
+            description);
 
         Result<Guid, Error> result = await lessonsRepository.Add(lesson, cancellationToken);
 
