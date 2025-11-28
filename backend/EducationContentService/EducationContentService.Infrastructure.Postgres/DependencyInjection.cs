@@ -1,4 +1,5 @@
-﻿using EducationContentService.Core.Features.Lessons;
+﻿using EducationContentService.Core.Database;
+using EducationContentService.Core.Features.Lessons;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +31,28 @@ public static class DependencyInjectionExtensions
             // serilog
             options.UseLoggerFactory(loggerFactory);
         });
+
+        services.AddDbContextPool<IEducationReadDbContext, EducationDbContext>((sp, options) =>
+        {
+            string? connectionString = configuration.GetConnectionString(Constants.DATABASE);
+            IHostEnvironment? hostEnvironment = sp.GetService<IHostEnvironment>();
+            ILoggerFactory? loggerFactory = sp.GetService<ILoggerFactory>();
+
+            options.UseNpgsql(connectionString);
+
+            if (hostEnvironment!.IsDevelopment())
+            {
+                options.EnableSensitiveDataLogging();
+                options.EnableDetailedErrors();
+            }
+
+            // serilog
+            options.UseLoggerFactory(loggerFactory);
+        });
+
+        services.AddSingleton<IDbConnectionFactory, NpgSqlConnectionFactory>();
+
+        services.AddScoped<ITransactionManager, TransactionManager>();
 
         services.AddScoped<ILessonsRepository, LessonsRepository>();
 

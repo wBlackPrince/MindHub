@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" />
+      <PackageReference Include="Scrutor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Shared.SharedKernel\Shared.SharedKernel.csproj" />
+    </ItemGroup>
+
+  <PropertyGroup>
+    <PackageId>EduardNikitin.Core</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>EduardNikitin</Authors>
+    <Company>EduardNikitin</Company>
+    <PackageDescription>Core</PackageDescription>
+    <RepositoryUrl>https://gitlab.com/EduardNikitin/mindhub</RepositoryUrl>
+  </PropertyGroup>
+</Project>

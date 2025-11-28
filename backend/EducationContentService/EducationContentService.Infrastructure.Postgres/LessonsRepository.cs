@@ -1,10 +1,11 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Linq.Expressions;
+using CSharpFunctionalExtensions;
 using EducationContentService.Core.Features.Lessons;
 using EducationContentService.Domain.Lessons;
-using EducationContentService.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using Shared.SharedKernel;
 using Index = EducationContentService.Infrastructure.Postgres.Configurations.Index;
 
 namespace EducationContentService.Infrastructure.Postgres;
@@ -13,9 +14,9 @@ public class LessonsRepository(
     ILogger<LessonsRepository> logger,
     EducationDbContext dbContext): ILessonsRepository
 {
-    public async Task<Result<Guid, Error>> Add(Lesson lesson, CancellationToken cancellationToken = default)
+    public async Task<Result<Guid, Error>> AddAsync(Lesson lesson, CancellationToken cancellationToken = default)
     {
-        dbContext.Add(lesson);
+        dbContext.Lessons.Add(lesson);
 
         try
         {
@@ -59,5 +60,17 @@ public class LessonsRepository(
             return EducationErrors.DatabaseError();
         }
 
+    }
+
+    public async Task<Result<Lesson, Error>> GetByAsync(
+        Expression<Func<Lesson, bool>> predicate,
+        CancellationToken cancellationToken = default)
+    {
+        Lesson? lesson = await dbContext.Lessons.FirstOrDefaultAsync(predicate, cancellationToken);
+
+        if (lesson is null)
+            return GeneralErrors.NotFound(null, "lesson");
+
+        return lesson;
     }
 }

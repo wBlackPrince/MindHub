@@ -7,14 +7,19 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\EducationContentService.Contracts\EducationContentService.Contracts.csproj" />
       <ProjectReference Include="..\EducationContentService.Domain\EducationContentService.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Dapper" />
+      <PackageReference Include="EduardNikitin.Core" />
+      <PackageReference Include="EduardNikitin.Framework" />
       <PackageReference Include="FluentValidation" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
       <PackageReference Include="Microsoft.AspNetCore.Routing" />
       <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" />
     </ItemGroup>
   

@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="CSharpFunctionalExtensions" />
+  </ItemGroup>
+  
+  <PropertyGroup>
+    <PackageId>EduardNikitin.SharedKernel</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>EduardNikitin</Authors>
+    <Company>EduardNikitin</Company>
+    <PackageDescription>SharedKernel</PackageDescription>
+    <RepositoryUrl>https://gitlab.com/EduardNikitin/mindhub</RepositoryUrl>
+  </PropertyGroup>
+</Project>

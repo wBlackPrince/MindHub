@@ -39,19 +39,9 @@ namespace EducationContentService.Infrastructure.Postgres.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("description");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("title");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -60,11 +50,56 @@ namespace EducationContentService.Infrastructure.Postgres.Migrations
                     b.HasKey("Id")
                         .HasName("pk_id");
 
-                    b.HasIndex("Title")
-                        .IsUnique()
-                        .HasDatabaseName("ix_lessons_title");
-
                     b.ToTable("lessons", (string)null);
+                });
+
+            modelBuilder.Entity("EducationContentService.Domain.Lessons.Lesson", b =>
+                {
+                    b.OwnsOne("EducationContentService.Domain.ValueObjects.Description", "Description", b1 =>
+                        {
+                            b1.Property<Guid>("LessonId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("description");
+
+                            b1.HasKey("LessonId");
+
+                            b1.ToTable("lessons");
+
+                            b1.WithOwner()
+                                .HasForeignKey("LessonId");
+                        });
+
+                    b.OwnsOne("EducationContentService.Domain.ValueObjects.Title", "Title", b1 =>
+                        {
+                            b1.Property<Guid>("LessonId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("title");
+
+                            b1.HasKey("LessonId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique()
+                                .HasDatabaseName("ix_lessons_title");
+
+                            b1.ToTable("lessons");
+
+                            b1.WithOwner()
+                                .HasForeignKey("LessonId");
+                        });
+
+                    b.Navigation("Description")
+                        .IsRequired();
+
+                    b.Navigation("Title")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

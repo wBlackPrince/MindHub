@@ -1,10 +1,13 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Linq.Expressions;
+using CSharpFunctionalExtensions;
 using EducationContentService.Domain.Lessons;
-using EducationContentService.Domain.Shared;
+using Shared.SharedKernel;
 
 namespace EducationContentService.Core.Features.Lessons;
 
 public interface ILessonsRepository
 {
-    Task<Result<Guid, Error>> Add(Lesson lesson, CancellationToken cancellationToken = default);
+    Task<Result<Guid, Error>> AddAsync(Lesson lesson, CancellationToken cancellationToken = default);
+
+    Task<Result<Lesson, Error>> GetByAsync(Expression<Func<Lesson, bool>> predicate, CancellationToken cancellationToken = default);
 }

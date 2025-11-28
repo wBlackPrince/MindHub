@@ -1,22 +1,18 @@
-﻿using CSharpFunctionalExtensions;
-using EducationContentService.Core.Endpoints;
-using EducationContentService.Core.Validation;
-using EducationContentService.Domain.Exceptions;
+﻿using Core.Validation;
+using CSharpFunctionalExtensions;
+using EducationContentService.Contracts;
 using EducationContentService.Domain.Lessons;
-using EducationContentService.Domain.Shared;
 using EducationContentService.Domain.ValueObjects;
 using FluentValidation;
 using FluentValidation.Results;
+using Framework.Endpoints;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
-using IResult = Microsoft.AspNetCore.Http.IResult;
+using Shared.SharedKernel;
 
 namespace EducationContentService.Core.Features.Lessons;
-
-public record CreateLessonRequest(string Title, string Description);
 
 public class CreateLessonRequestValidator : AbstractValidator<CreateLessonRequest>
 {
@@ -66,12 +62,12 @@ public sealed class CreateHandler(
             title,
             description);
 
-        Result<Guid, Error> result = await lessonsRepository.Add(lesson, cancellationToken);
+        Result<Guid, Error> result = await lessonsRepository.AddAsync(lesson, cancellationToken);
 
         if (result.IsFailure)
             return result.Error;
 
-        logger.LogInformation("Created lesson {@Lesson}", lesson);
+        logger.LogInformation("Created lesson {@LessonId}", lesson.Id);
 
         return result;
     }

@@ -20,6 +20,8 @@ try
     builder.Configuration.AddEnvironmentVariables();
     builder.Services.AddConfiguration(builder.Configuration);
 
+    Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
     WebApplication app = builder.Build();
 
     app.ConfigureApp();
