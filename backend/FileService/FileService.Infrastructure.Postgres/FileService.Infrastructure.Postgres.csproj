@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\FileService.Core\FileService.Core.csproj" />
+  </ItemGroup>
+</Project>

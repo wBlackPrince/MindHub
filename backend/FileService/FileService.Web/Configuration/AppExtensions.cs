@@ -2,7 +2,7 @@
 using Framework.Middlewares;
 using Serilog;
 
-namespace EducationContentService.Web.Configuration;
+namespace FileService.Web.Configuration;
 
 public static class AppExtensions
 {
@@ -17,10 +17,10 @@ public static class AppExtensions
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint("/openapi/v1.json", "Education Content Service V1");
+            options.SwaggerEndpoint("/openapi/v1.json", "File Service V1");
         });
 
-        RouteGroupBuilder apiGroup = app.MapGroup("api/lessons").WithOpenApi();
+        RouteGroupBuilder apiGroup = app.MapGroup("/api").WithOpenApi();
 
         app.MapEndpoints(apiGroup);
 

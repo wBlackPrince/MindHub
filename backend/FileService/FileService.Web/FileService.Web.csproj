@@ -7,7 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
+      <ProjectReference Include="..\FileService.Core\FileService.Core.csproj" />
+      <ProjectReference Include="..\FileService.Domain\FileService.Domain.csproj" />
+      <ProjectReference Include="..\FileService.Infrastructure.Postgres\FileService.Infrastructure.Postgres.csproj" />
+      <ProjectReference Include="..\FileService.Infrastructure.S3\FileService.Infrastructure.S3.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="EduardNikitin.Framework" />
+    </ItemGroup>
 </Project>

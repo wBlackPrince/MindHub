@@ -1,0 +1,16 @@
+﻿<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="AWSSDK.Extensions.NETCore.Setup" Version="4.0.3.14" />
+    <PackageVersion Include="AWSSDK.S3" Version="4.0.14" />
+    <PackageVersion Include="Dapper" Version="2.1.66" />
+    <PackageVersion Include="EduardNikitin.Core" Version="0.0.1" />
+    <PackageVersion Include="EduardNikitin.Framework" Version="0.0.3" />
+    <PackageVersion Include="EduardNikitin.SharedKernel" Version="0.0.1" />
+    <PackageVersion Include="FluentValidation" Version="12.1.1" />
+    <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
+  </ItemGroup>
+</Project>
