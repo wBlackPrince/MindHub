@@ -5,6 +5,7 @@
   <ItemGroup>
     <PackageVersion Include="AWSSDK.Extensions.NETCore.Setup" Version="4.0.3.14" />
     <PackageVersion Include="AWSSDK.S3" Version="4.0.14" />
+    <PackageVersion Include="CSharpFunctionalExtensions" Version="3.6.0" />
     <PackageVersion Include="Dapper" Version="2.1.66" />
     <PackageVersion Include="EduardNikitin.Core" Version="0.0.1" />
     <PackageVersion Include="EduardNikitin.Framework" Version="0.0.3" />

@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileService.Contracts", "FileService.Contracts\FileService.Contracts.csproj", "{57018A5B-8082-463D-B5AC-27AC84526B9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,5 +45,9 @@ Global
 		{2735EF76-3DA2-45B8-8D19-8C9A3E87382E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2735EF76-3DA2-45B8-8D19-8C9A3E87382E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2735EF76-3DA2-45B8-8D19-8C9A3E87382E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57018A5B-8082-463D-B5AC-27AC84526B9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57018A5B-8082-463D-B5AC-27AC84526B9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57018A5B-8082-463D-B5AC-27AC84526B9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57018A5B-8082-463D-B5AC-27AC84526B9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
