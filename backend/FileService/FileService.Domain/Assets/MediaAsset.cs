@@ -1,4 +1,7 @@
-﻿namespace FileService.Domain.Assets;
+﻿using CSharpFunctionalExtensions;
+using Shared.SharedKernel;
+
+namespace FileService.Domain.Assets;
 
 public abstract class MediaAsset
 {
@@ -29,7 +32,6 @@ public abstract class MediaAsset
         MediaData mediaData,
         MediaStatus status,
         AssetType assetType,
-        MediaOwner owner,
         StorageKey key)
     {
         Id = id;
@@ -38,7 +40,44 @@ public abstract class MediaAsset
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
         AssetType = assetType;
-        Owner = owner;
         Key = key;
+    }
+
+    public static Result<MediaAsset, Error> CreateForUpload(MediaData mediaData, AssetType assetType)
+    {
+        Guid assetId = Guid.NewGuid();
+
+        switch (assetType)
+        {
+            case AssetType.VIDEO:
+                Result<VideoAsset, Error> videoResult = VideoAsset.CreateForUpload(assetId, mediaData);
+                return videoResult.IsFailure ? videoResult.Error : videoResult.Value;
+            case AssetType.PREVIEW:
+                Result<PreviewAsset, Error> previewResult = PreviewAsset.CreateForUpload(assetId, mediaData);
+                return previewResult.IsFailure ? previewResult.Error : previewResult.Value;
+            case AssetType.AVATAR:
+            default:
+                throw new ArgumentOutOfRangeException(nameof(assetType), assetType, null);
+        }
+    }
+
+    public UnitResult<Error> MarkUploaded()
+    {
+        if (Status != MediaStatus.UPLOADING)
+            return UnitResult.Success<Error>();
+
+        Status = MediaStatus.UPLOADED;
+        UpdatedAt = DateTime.UtcNow;
+        return UnitResult.Success<Error>();
+    }
+
+    public UnitResult<Error> MarkFailed()
+    {
+        if (Status != MediaStatus.FAILED)
+            return UnitResult.Success<Error>();
+
+        Status = MediaStatus.FAILED;
+        UpdatedAt = DateTime.UtcNow;
+        return UnitResult.Success<Error>();
     }
 }

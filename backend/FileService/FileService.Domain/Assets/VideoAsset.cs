@@ -21,9 +21,8 @@ public class VideoAsset: MediaAsset
         Guid id,
         MediaData mediaData,
         MediaStatus status,
-        MediaOwner owner,
         StorageKey storageKey)
-        : base(id, mediaData, status, AssetType.VIDEO, owner, storageKey)
+        : base(id, mediaData, status, AssetType.VIDEO, storageKey)
     {
     }
 
@@ -48,7 +47,7 @@ public class VideoAsset: MediaAsset
 
     }
 
-    public static Result<VideoAsset, Error> CreateForUpload(Guid id, MediaData mediaData, MediaOwner mediaOwner)
+    public static Result<VideoAsset, Error> CreateForUpload(Guid id, MediaData mediaData)
     {
         UnitResult<Error> validationResult = Validate(mediaData);
 
@@ -64,7 +63,6 @@ public class VideoAsset: MediaAsset
             id,
             mediaData,
             MediaStatus.UPLOADING,
-            mediaOwner,
             storageKeyResult.Value);
     }
 }

@@ -21,9 +21,8 @@ public class PreviewAsset: MediaAsset
         Guid id,
         MediaData mediaData,
         MediaStatus status,
-        MediaOwner owner,
         StorageKey storageKey)
-        : base(id, mediaData, status, AssetType.PREVIEW, owner, storageKey)
+        : base(id, mediaData, status, AssetType.PREVIEW, storageKey)
     {
     }
 
@@ -47,7 +46,7 @@ public class PreviewAsset: MediaAsset
         return UnitResult.Success<Error>();
     }
 
-    public static Result<PreviewAsset, Error> CreateForUpload(Guid id, MediaData mediaData, MediaOwner mediaOwner)
+    public static Result<PreviewAsset, Error> CreateForUpload(Guid id, MediaData mediaData)
     {
         UnitResult<Error> validationResult = Validate(mediaData);
         if (validationResult.IsFailure)
@@ -66,7 +65,6 @@ public class PreviewAsset: MediaAsset
             id,
             mediaData,
             MediaStatus.UPLOADING,
-            mediaOwner,
             storageKeyResult.Value);
 
         return preview;

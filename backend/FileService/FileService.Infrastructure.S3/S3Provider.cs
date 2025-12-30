@@ -2,7 +2,8 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using CSharpFunctionalExtensions;
 using FileService.Contracts;
-using FileService.Core;
+using FileService.Core.FilesStorage;
+using FileService.Domain;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shared.SharedKernel;
@@ -29,9 +30,8 @@ public class S3Provider: IDisposable, IS3Provider
 
     // метод начинающий мульти-парт загрузку файла
     public async Task<Result<string, Error>> StartMultipartUploadAsync(
-        string bucketName,
-        string key,
-        string contentType,
+        StorageKey storageKey,
+        MediaData mediaData,
         CancellationToken cancellationToken)
     {
         await _requestsSemaphore.WaitAsync(cancellationToken);
@@ -40,12 +40,14 @@ public class S3Provider: IDisposable, IS3Provider
         {
             var request = new InitiateMultipartUploadRequest()
             {
-                BucketName = bucketName, Key = key, ContentType = contentType
+                BucketName = storageKey.Location,
+                Key = storageKey.Value,
+                ContentType = mediaData.ContentType.ToString()
             };
 
             InitiateMultipartUploadResponse response = await _s3Client.InitiateMultipartUploadAsync(
-                bucketName,
-                key,
+                storageKey.Location,
+                storageKey.Value,
                 cancellationToken);
 
             return response.UploadId;
@@ -59,16 +61,15 @@ public class S3Provider: IDisposable, IS3Provider
 
 
     // разбиение файла на чанки для дальнейшей мульти-парт загрузки
-    public async Task<Result<IReadOnlyList<string>, Error>> GenerateAllChunksUploadUrlsAsync(
-        string bucketName,
-        string key,
+    public async Task<Result<IReadOnlyList<ChunkUploadUrl>, Error>> GenerateAllChunksUploadUrlsAsync(
+        StorageKey storageKey,
         string uploadId,
         int totalChunks,
         CancellationToken cancellationToken)
     {
         try
         {
-            IEnumerable<Task<string>> tasks = Enumerable.Range(1, totalChunks)
+            IEnumerable<Task<ChunkUploadUrl>> tasks = Enumerable.Range(1, totalChunks)
                 .Select(async partNumber =>
                 {
                     await _requestsSemaphore.WaitAsync(cancellationToken);
@@ -77,8 +78,8 @@ public class S3Provider: IDisposable, IS3Provider
                     {
                         GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
                         {
-                            BucketName = bucketName,
-                            Key = key,
+                            BucketName = storageKey.Location,
+                            Key = storageKey.Value,
                             Verb = HttpVerb.PUT,
                             UploadId = uploadId,
                             PartNumber = partNumber,
@@ -88,7 +89,7 @@ public class S3Provider: IDisposable, IS3Provider
 
                         string? url = await _s3Client.GetPreSignedURLAsync(request);
 
-                        return url;
+                        return new ChunkUploadUrl(partNumber, url);
                     }
                     finally
                     {
@@ -96,7 +97,7 @@ public class S3Provider: IDisposable, IS3Provider
                     }
                 });
 
-            string[] results = await Task.WhenAll(tasks);
+            ChunkUploadUrl[] results = await Task.WhenAll(tasks);
 
             return results;
         }
@@ -109,8 +110,7 @@ public class S3Provider: IDisposable, IS3Provider
 
     // метод завершает мульти-парт загрузку файла
     public async Task<Result<string, Error>> CompleteMultiPartUploadAsync(
-        string bucketName,
-        string key,
+        StorageKey storageKey,
         string uploadId,
         IReadOnlyList<PartETagDto> partETags,
         CancellationToken cancellationToken)
@@ -119,8 +119,8 @@ public class S3Provider: IDisposable, IS3Provider
         {
             CompleteMultipartUploadRequest request = new CompleteMultipartUploadRequest()
             {
-                BucketName = bucketName,
-                Key = key,
+                BucketName = storageKey.Location,
+                Key = storageKey.Value,
                 UploadId = uploadId,
                 PartETags = partETags.Select(p => new PartETag(p.PartNumber, p.ETag)).ToList(),
             };
@@ -138,14 +138,12 @@ public class S3Provider: IDisposable, IS3Provider
 
 
     // генерируем url для скачивания файла
-    public async Task<string?> GenerateDownloadUrlAsync(
-        string bucketName,
-        string key)
+    public async Task<string?> GenerateDownloadUrlAsync(StorageKey storageKey, CancellationToken cancellationToken)
     {
         GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
         {
-            BucketName = bucketName,
-            Key = key,
+            BucketName = storageKey.Location,
+            Key = storageKey.Value,
             Verb = HttpVerb.GET,
             Expires = DateTime.UtcNow.AddHours(_s3Options.DownloadUrlExpirationHours),
             Protocol = _s3Options.WithSSL ? Protocol.HTTPS : Protocol.HTTP,
@@ -154,32 +152,6 @@ public class S3Provider: IDisposable, IS3Provider
         string? response = await _s3Client.GetPreSignedURLAsync(request);
 
         return response;
-    }
-
-    // генерируем url для загрузки файла
-    public async Task<Result<string?, Error>> GenerateUploadUrlAsync(
-        string bucketName,
-        string key)
-    {
-        try
-        {
-            GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
-            {
-                BucketName = bucketName,
-                Key = key,
-                Verb = HttpVerb.PUT,
-                Expires = DateTime.UtcNow.AddHours(6),
-                Protocol = _s3Options.WithSSL ? Protocol.HTTPS : Protocol.HTTP,
-            };
-
-            string? response = await _s3Client.GetPreSignedURLAsync(request);
-
-            return response;
-        }
-        catch (Exception e)
-        {
-            return S3ErrorMapper.ToError(e);
-        }
     }
 
     public void Dispose()

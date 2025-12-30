@@ -17,4 +17,8 @@ public record S3Options
     public int UploadUrlExpirationHours { get; init; } = 1;
 
     public int MaxConcurrentRequests { get; init; } = 20;
+
+    public long RecommendedChunkSizeBytes { get; init; } = 100 * 1024 * 1024 * 8; // 100 МБ
+
+    public int MaxChunks { get; init; } = 100;
 }
