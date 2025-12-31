@@ -3,6 +3,7 @@ using Amazon.S3.Model;
 using CSharpFunctionalExtensions;
 using FileService.Contracts;
 using FileService.Core.FilesStorage;
+using FileService.Core.Models;
 using FileService.Domain;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -138,20 +139,70 @@ public class S3Provider: IDisposable, IS3Provider
 
 
     // генерируем url для скачивания файла
-    public async Task<string?> GenerateDownloadUrlAsync(StorageKey storageKey, CancellationToken cancellationToken)
+    public async Task<Result<string?, Error>> GenerateDownloadUrlAsync(StorageKey storageKey, CancellationToken cancellationToken)
     {
-        GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
+        try
         {
-            BucketName = storageKey.Location,
-            Key = storageKey.Value,
-            Verb = HttpVerb.GET,
-            Expires = DateTime.UtcNow.AddHours(_s3Options.DownloadUrlExpirationHours),
-            Protocol = _s3Options.WithSSL ? Protocol.HTTPS : Protocol.HTTP,
-        };
+            GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
+            {
+                BucketName = storageKey.Location,
+                Key = storageKey.Value,
+                Verb = HttpVerb.GET,
+                Expires = DateTime.UtcNow.AddHours(_s3Options.DownloadUrlExpirationDays),
+                Protocol = _s3Options.WithSSL ? Protocol.HTTPS : Protocol.HTTP,
+            };
 
-        string? response = await _s3Client.GetPreSignedURLAsync(request);
+            string? response = await _s3Client.GetPreSignedURLAsync(request);
 
-        return response;
+            return response;
+        }
+        catch (Exception e)
+        {
+            return S3ErrorMapper.ToError(e);
+        }
+    }
+
+
+    public async Task<Result<IReadOnlyList<MediaUrl>, Error>> GenerateDownloadUrlsAsync(
+        IEnumerable<StorageKey> storageKeys,
+        CancellationToken cancellationToken)
+    {
+        try
+        {
+            IEnumerable<Task<MediaUrl>> tasks = storageKeys.Select(async storageKey =>
+            {
+                await _requestsSemaphore.WaitAsync(cancellationToken);
+
+
+                try
+                {
+                    GetPreSignedUrlRequest request = new GetPreSignedUrlRequest()
+                    {
+                        BucketName = storageKey.Location,
+                        Key = storageKey.Value,
+                        Verb = HttpVerb.GET,
+                        Expires = DateTime.UtcNow.AddHours(_s3Options.DownloadUrlExpirationDays),
+                        Protocol = _s3Options.WithSSL ? Protocol.HTTPS : Protocol.HTTP,
+                    };
+
+                    string? preSignedUrl = await _s3Client.GetPreSignedURLAsync(request);
+
+                    return new MediaUrl(storageKey, preSignedUrl);
+                }
+                finally
+                {
+                    _requestsSemaphore.Release();
+                }
+            });
+
+            MediaUrl[] result = await Task.WhenAll(tasks);
+
+            return result;
+        }
+        catch (Exception e)
+        {
+            return S3ErrorMapper.ToError(e);
+        }
     }
 
     public void Dispose()

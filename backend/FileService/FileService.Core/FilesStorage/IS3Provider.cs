@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FileService.Contracts;
+using FileService.Core.Models;
 using FileService.Domain;
 using Shared.SharedKernel;
 
@@ -24,7 +25,11 @@ public interface IS3Provider
         IReadOnlyList<PartETagDto> partETags,
         CancellationToken cancellationToken);
 
-    Task<string?> GenerateDownloadUrlAsync(
+    Task<Result<string?, Error>> GenerateDownloadUrlAsync(
         StorageKey storageKey,
+        CancellationToken cancellationToken);
+
+    Task<Result<IReadOnlyList<MediaUrl>, Error>> GenerateDownloadUrlsAsync(
+        IEnumerable<StorageKey> storageKeys,
         CancellationToken cancellationToken);
 }

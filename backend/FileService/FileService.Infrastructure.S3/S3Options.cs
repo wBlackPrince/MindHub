@@ -10,7 +10,7 @@ public record S3Options
 
     public bool WithSSL { get; init; }
 
-    public int DownloadUrlExpirationHours { get; init; } = 24;
+    public int DownloadUrlExpirationDays { get; init; } = 6;
 
     public IReadOnlyList<string> RequiredBuckets { get; init; } = [];
 

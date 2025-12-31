@@ -5,6 +5,7 @@ namespace FileService.Domain;
 
 public sealed record FileName
 {
+    public string Value { get; }
     public string Name { get; }
 
     public string Extension { get; }
@@ -13,6 +14,7 @@ public sealed record FileName
     {
         Name = name;
         Extension = extension;
+        Value = Name + Extension;
     }
 
     public static Result<FileName, Error> Create(string fileName)
