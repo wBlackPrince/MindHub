@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionF
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileService.Contracts", "FileService.Contracts\FileService.Contracts.csproj", "{57018A5B-8082-463D-B5AC-27AC84526B9C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{13324D93-0035-4E23-B51D-B14D190B0CA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileService.IntegrationTests", "tests\FileService.IntegrationTests\FileService.IntegrationTests.csproj", "{42A805BE-C408-44FB-B8EF-0E749BF3515D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,5 +53,12 @@ Global
 		{57018A5B-8082-463D-B5AC-27AC84526B9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57018A5B-8082-463D-B5AC-27AC84526B9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57018A5B-8082-463D-B5AC-27AC84526B9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42A805BE-C408-44FB-B8EF-0E749BF3515D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42A805BE-C408-44FB-B8EF-0E749BF3515D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42A805BE-C408-44FB-B8EF-0E749BF3515D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42A805BE-C408-44FB-B8EF-0E749BF3515D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{42A805BE-C408-44FB-B8EF-0E749BF3515D} = {13324D93-0035-4E23-B51D-B14D190B0CA3}
 	EndGlobalSection
 EndGlobal

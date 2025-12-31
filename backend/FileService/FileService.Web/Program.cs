@@ -38,3 +38,5 @@ finally
 {
     await Log.CloseAndFlushAsync(); // ensure all logs written before app exits
 }
+
+public partial class Program;
