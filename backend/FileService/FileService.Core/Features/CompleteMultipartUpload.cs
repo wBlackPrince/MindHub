@@ -15,8 +15,8 @@ public sealed class CompleteMultipartUpload: IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/files/complete-multipart-upload", async Task<EndpointResult> (
-            [FromBody] CompleteMultiPartUploadRequest request,
+        app.MapPost("/files/complete-upload", async Task<EndpointResult>(
+            [FromBody] CompleteMultipartUploadRequest request,
             [FromServices] CompleteMultiPartUploadHandler handler,
             CancellationToken cancellationToken) => await handler.Handle(request, cancellationToken));
     }
@@ -29,7 +29,7 @@ public sealed class CompleteMultiPartUploadHandler(
     IS3Provider s3Provider)
 {
     public async Task<UnitResult<Error>> Handle(
-        CompleteMultiPartUploadRequest request,
+        CompleteMultipartUploadRequest request,
         CancellationToken cancellationToken)
     {
         (_, bool isFailure, MediaAsset? mediaAsset, Error? error) = await mediaAssetsRepository.GetByAsync(

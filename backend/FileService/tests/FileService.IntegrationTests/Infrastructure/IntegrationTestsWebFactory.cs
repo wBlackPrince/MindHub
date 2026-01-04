@@ -3,6 +3,7 @@ using FileService.Core;
 using FileService.Core.FilesStorage;
 using FileService.Infrastructure.Postgres;
 using FileService.Infrastructure.S3;
+using FileService.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;

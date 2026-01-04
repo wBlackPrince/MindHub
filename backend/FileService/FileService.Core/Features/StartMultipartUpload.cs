@@ -16,8 +16,8 @@ public sealed class StartMultipartUpload: IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/files/start-multipart-upload", async Task<EndpointResult<StartMultiPartUploadResponse>> (
-            [FromBody] StartMultiPartUploadRequest request,
+        app.MapPost("/files/start-multipart-upload", async Task<EndpointResult<StartMultipartUploadResponse>> (
+            [FromBody] StartMultipartUploadRequest request,
             [FromServices] StartMultiPartUploadHandler handler,
             CancellationToken cancellationToken) => await handler.Handle(request, cancellationToken));
     }
@@ -30,8 +30,8 @@ public sealed class StartMultiPartUploadHandler(
     IMediaAssetsRepository mediaAssetsRepository,
     IS3Provider s3Provider)
 {
-    public async Task<Result<StartMultiPartUploadResponse, Error>> Handle(
-        StartMultiPartUploadRequest request,
+    public async Task<Result<StartMultipartUploadResponse, Error>> Handle(
+        StartMultipartUploadRequest request,
         CancellationToken cancellationToken)
     {
         // валидация
@@ -50,7 +50,7 @@ public sealed class StartMultiPartUploadHandler(
 
         // посчитать количество чанков для загрузки файла
 
-        Result<(long ChunkSize, int TotalChunks), Error> chunkCalculationResult = chunkSizeCalculator
+        Result<(int ChunkSize, int TotalChunks), Error> chunkCalculationResult = chunkSizeCalculator
             .CalculateChunkSize(request.Size);
 
         if(chunkCalculationResult.IsFailure)
@@ -105,7 +105,7 @@ public sealed class StartMultiPartUploadHandler(
             mediaAssetResult.Value.Key);
 
         // вернуть данные mediaasset (id), uploadId, коллекцию ссылок для загрузки чанков, размер чанка
-        return new StartMultiPartUploadResponse(
+        return new StartMultipartUploadResponse(
             mediaAssetResult.Value.Id,
             startUploadResult.Value,
             chunkUploadUrlsResult.Value,

@@ -8,6 +8,7 @@ using FileService.Domain;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shared.SharedKernel;
+using CompleteMultipartUploadRequest = Amazon.S3.Model.CompleteMultipartUploadRequest;
 
 namespace FileService.Infrastructure.S3;
 

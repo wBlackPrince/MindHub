@@ -25,4 +25,10 @@
       <ProjectReference Include="..\..\FileService.Web\FileService.Web.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Resources\test-file.mp4">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
