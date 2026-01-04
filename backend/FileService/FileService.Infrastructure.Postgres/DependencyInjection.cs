@@ -1,5 +1,6 @@
 ﻿using FileService.Core;
 using FileService.Core.FilesStorage;
+using FileService.Infrastructure.Postgres.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +15,7 @@ public static class DependencyInjectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<IMediaAssetsRepository, IMediaAssetsRepository>();
+        services.AddScoped<IMediaAssetsRepository, MediaAssetsRepository>();
 
         services.AddDbContextPool<FilesServiceDbContext>((sp, options) =>
         {

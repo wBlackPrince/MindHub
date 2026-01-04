@@ -1,3 +1,4 @@
+using FileService.Core.Features;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,9 @@ public static class DependencyInjectionCoreExtensions
         IConfiguration configuration)
     {
         services.AddValidatorsFromAssembly(typeof(DependencyInjectionCoreExtensions).Assembly);
+
+        services.AddScoped<StartMultiPartUploadHandler>();
+        services.AddScoped<CompleteMultiPartUploadHandler>();
 
         return services;
     }

@@ -28,7 +28,7 @@ public class IntegrationTestsWebFactory: WebApplicationFactory<Program>, IAsyncL
         .Build();
 
     private readonly MinioContainer _minioContainer = new MinioBuilder()
-        .WithImage("minio")
+        .WithImage("minio/minio")
         .WithUsername("minioadmin")
         .WithPassword("minioadmin")
         .Build();
@@ -38,6 +38,12 @@ public class IntegrationTestsWebFactory: WebApplicationFactory<Program>, IAsyncL
     {
         await _dbContainer.StartAsync();
         await _minioContainer.StartAsync();
+
+        await using AsyncServiceScope scope = Services.CreateAsyncScope();
+        FilesServiceDbContext dbContext = scope.ServiceProvider.GetRequiredService<FilesServiceDbContext>();
+
+        await dbContext.Database.EnsureCreatedAsync();
+        await dbContext.Database.EnsureCreatedAsync();
     }
 
     public async Task DisposeAsync()

@@ -17,15 +17,13 @@ public abstract class MediaAsset
 
     public StorageKey Key { get; protected set; } = null!;
 
-    public MediaOwner Owner { get; protected set; } = null!;
-
     public MediaStatus Status { get; protected set; }
 
-    // Ef Core
+    public string? UploadId { get; protected set; }
+
     protected MediaAsset()
     {
     }
-
 
     protected MediaAsset(
         Guid id,
@@ -38,14 +36,14 @@ public abstract class MediaAsset
         MediaData = mediaData;
         Status = status;
         CreatedAt = DateTime.UtcNow;
-        UpdatedAt = DateTime.UtcNow;
+        UpdatedAt = CreatedAt;
         AssetType = assetType;
         Key = key;
     }
 
     public static Result<MediaAsset, Error> CreateForUpload(MediaData mediaData, AssetType assetType)
     {
-        Guid assetId = Guid.NewGuid();
+        var assetId = Guid.NewGuid();
 
         switch (assetType)
         {
@@ -55,10 +53,20 @@ public abstract class MediaAsset
             case AssetType.PREVIEW:
                 Result<PreviewAsset, Error> previewResult = PreviewAsset.CreateForUpload(assetId, mediaData);
                 return previewResult.IsFailure ? previewResult.Error : previewResult.Value;
+
             case AssetType.AVATAR:
             default:
                 throw new ArgumentOutOfRangeException(nameof(assetType), assetType, null);
         }
+    }
+
+    public void SetUploadId(string uploadId)
+    {
+        if (Status != MediaStatus.UPLOADING)
+            return;
+
+        UploadId = uploadId;
+        UpdatedAt = DateTime.UtcNow;
     }
 
     public UnitResult<Error> MarkUploaded()
@@ -67,17 +75,14 @@ public abstract class MediaAsset
             return UnitResult.Success<Error>();
 
         Status = MediaStatus.UPLOADED;
+        UploadId = null;
         UpdatedAt = DateTime.UtcNow;
         return UnitResult.Success<Error>();
     }
 
-    public UnitResult<Error> MarkFailed()
+    public void MarkFailed()
     {
-        if (Status != MediaStatus.FAILED)
-            return UnitResult.Success<Error>();
-
         Status = MediaStatus.FAILED;
         UpdatedAt = DateTime.UtcNow;
-        return UnitResult.Success<Error>();
     }
 }

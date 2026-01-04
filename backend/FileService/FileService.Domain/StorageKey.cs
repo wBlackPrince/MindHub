@@ -15,7 +15,7 @@ public sealed record StorageKey
 
     public string FullPath { get; }
 
-    private StorageKey(string key, string prefix, string location)
+    private StorageKey(string location, string prefix, string key)
     {
         Key = key;
         Prefix = prefix;
@@ -24,7 +24,7 @@ public sealed record StorageKey
         FullPath = $"{Location}/{Value}";
     }
 
-    public static Result<StorageKey, Error> Create(string key, string? prefix, string location)
+    public static Result<StorageKey, Error> Create(string location, string? prefix, string key)
     {
         if (string.IsNullOrWhiteSpace(location))
             return GeneralErrors.ValueIsInvalid("location");

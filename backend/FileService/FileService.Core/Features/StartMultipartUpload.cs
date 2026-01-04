@@ -16,7 +16,7 @@ public sealed class StartMultipartUpload: IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("/files/multipart-upload", async Task<EndpointResult<StartMultiPartUploadResponse>> (
+        app.MapPost("/files/start-multipart-upload", async Task<EndpointResult<StartMultiPartUploadResponse>> (
             [FromBody] StartMultiPartUploadRequest request,
             [FromServices] StartMultiPartUploadHandler handler,
             CancellationToken cancellationToken) => await handler.Handle(request, cancellationToken));

@@ -63,15 +63,14 @@ public class S3BucketInitializationService: BackgroundService
     {
         try
         {
-            bool bucketExistence = await AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, bucketName);
-
-            if (bucketExistence)
+            bool bucketExists = await AmazonS3Util.DoesS3BucketExistV2Async(_s3Client, bucketName);
+            if (bucketExists)
             {
-                _logger.LogInformation("Bucket already exists at {BucketName}", bucketName);
+                _logger.LogInformation("Bucket {Bucket} already exists", bucketName);
                 return;
             }
 
-            _logger.LogInformation("Creating bucket {BucketName}", bucketName);
+            _logger.LogInformation("Creating bucket '{BucketName}'", bucketName);
 
             var putBucketRequest = new PutBucketRequest
             {
@@ -80,33 +79,31 @@ public class S3BucketInitializationService: BackgroundService
 
             await _s3Client.PutBucketAsync(putBucketRequest, cancellationToken);
 
-
-
             string policy = $$"""
-                            {
-                                "Version": "2012-10-17",
-                                "Statement": [
-                                  {
-                                    "Action": ["s3:GetObject"],
-                                    "Effect": "Allow",
-                                    "Principal": {
-                                      "AWS": ["*"]
-                                    },
-                                    "Resource": ["arn:aws:s3:::{{bucketName}}/*"],
-                                  }
-                                ]
-                            }
-                            """;
+                              {
+                                  "Version": "2012-10-17",
+                                  "Statement": [
+                                      {
+                                      "Effect": "Allow",
+                                      "Principal": {
+                                          "AWS": ["*"]
+                                      },
+                                      "Action": ["s3:GetObject"],
+                                      "Resource": ["arn:aws:s3:::{{bucketName}}/*"]
+                                      }
+                                  ]
+                              }
+                              """;
 
-            var putPolicyRequest = new PutBucketPolicyRequest()
+            var putPolicyRequest = new PutBucketPolicyRequest
             {
-                BucketName = bucketName,
-                Policy = policy
+                BucketName = bucketName, Policy = policy
             };
 
             await _s3Client.PutBucketPolicyAsync(putPolicyRequest, cancellationToken);
 
-            _logger.LogInformation("Bucket {BucketName} has been created", bucketName);
+            _logger.LogInformation("Bucket '{BucketName}' created successfully", bucketName);
+
         }
         catch (Exception e)
         {

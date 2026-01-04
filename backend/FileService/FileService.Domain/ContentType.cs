@@ -9,10 +9,10 @@ public sealed record ContentType
 
     public MediaType Category { get; }
 
-    private ContentType(string value, MediaType mediaType)
+    private ContentType(string value, MediaType category)
     {
         Value = value;
-        Category = mediaType;
+        Category = category;
     }
 
     public static Result<ContentType, Error> Create(string contentType)

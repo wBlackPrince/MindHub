@@ -46,6 +46,8 @@ public class S3Provider: IDisposable, IS3Provider
                 ContentType = mediaData.ContentType.ToString()
             };
 
+            _logger.LogCritical($"Bucket Name: {storageKey.Location}");
+
             InitiateMultipartUploadResponse response = await _s3Client.InitiateMultipartUploadAsync(
                 storageKey.Location,
                 storageKey.Value,
