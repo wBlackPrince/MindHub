@@ -38,13 +38,13 @@ public sealed class GetMediaAssetsHandler(
             return new GetMediaAssetsResponse([]);
         }
 
-        List<MediaAsset> mediaAssets = await readDbContext.MediaAssetsQuery
+        List<MediaAsset> mediaAssets = readDbContext.MediaAssetsQuery
             .Where(m => request.MediaAssetsIds.Contains(m.Id) && m.Status != MediaStatus.DELETED)
-            .ToListAsync(cancellationToken);
+            .ToList();
 
-        List<MediaAsset> readyMediaAssets = await readDbContext.MediaAssetsQuery
+        List<MediaAsset> readyMediaAssets = mediaAssets
             .Where(m => m.Status == MediaStatus.READY)
-            .ToListAsync(cancellationToken);
+            .ToList();
 
         List<StorageKey> keys = readyMediaAssets.Select(m => m.Key).Distinct().ToList();
 

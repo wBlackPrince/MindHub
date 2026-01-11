@@ -65,7 +65,8 @@ public class MultiPartUploadFileTests: FileServiceTestsBase
                 mediaAsset.Key.Value,
                 cancellationToken);
 
-            Console.WriteLine(objectResponse.ContentLength);
+            Assert.Equal(objectResponse.ContentLength, fileInfo.Length);
+            Assert.Equal(objectResponse.Key, mediaAsset.Key.Value);
         });
     }
 
