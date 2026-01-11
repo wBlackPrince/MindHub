@@ -1,6 +1,6 @@
-﻿namespace FileService.Infrastructure.S3;
+﻿namespace FileService.Core.FilesStorage;
 
-public record S3Options
+public record FileStorageOptions
 {
     public string Endpoint { get; init; } = string.Empty;
 

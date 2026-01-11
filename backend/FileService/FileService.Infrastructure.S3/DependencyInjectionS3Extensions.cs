@@ -15,11 +15,11 @@ public static class DependencyInjectionS3Extensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.Configure<S3Options>(configuration.GetSection(nameof(S3Options)));
+        services.Configure<FileStorageOptions>(configuration.GetSection(nameof(FileStorageOptions)));
 
         services.AddSingleton<IAmazonS3>(sp =>
         {
-            var s3Options = sp.GetRequiredService<IOptions<S3Options>>().Value;
+            var s3Options = sp.GetRequiredService<IOptions<FileStorageOptions>>().Value;
 
             var config = new AmazonS3Config()
             {
@@ -29,7 +29,7 @@ public static class DependencyInjectionS3Extensions
             return new AmazonS3Client(s3Options.AccessKey, s3Options.SecretKey, config);
         });
 
-        services.AddScoped<IS3Provider, S3Provider>();
+        services.AddScoped<FileStorageProvider, FileStorageProvider>();
 
         services.AddHostedService<S3BucketInitializationService>();
 

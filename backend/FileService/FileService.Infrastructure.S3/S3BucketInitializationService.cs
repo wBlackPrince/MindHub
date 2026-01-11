@@ -1,6 +1,7 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Util;
+using FileService.Core.FilesStorage;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -9,16 +10,16 @@ namespace FileService.Infrastructure.S3;
 
 public class S3BucketInitializationService: BackgroundService
 {
-    private readonly S3Options _s3Options;
+    private readonly FileStorageOptions _fileStorageOptions;
     private readonly IAmazonS3 _s3Client;
     private readonly ILogger<S3BucketInitializationService> _logger;
 
     public S3BucketInitializationService(
-        IOptions<S3Options> options,
+        IOptions<FileStorageOptions> options,
         IAmazonS3 s3Client,
         ILogger<S3BucketInitializationService> logger)
     {
-        _s3Options = options.Value;
+        _fileStorageOptions = options.Value;
         _s3Client = s3Client;
         _logger = logger;
     }
@@ -30,17 +31,17 @@ public class S3BucketInitializationService: BackgroundService
         {
             _logger.LogInformation("S3 bucket initialization service started");
 
-            if (_s3Options.RequiredBuckets.Count == 0)
+            if (_fileStorageOptions.RequiredBuckets.Count == 0)
             {
                 _logger.LogInformation("S3 bucket initialization service required buckets");
-                throw new ArgumentException($"{nameof(_s3Options.RequiredBuckets)} are required");
+                throw new ArgumentException($"{nameof(_fileStorageOptions.RequiredBuckets)} are required");
             }
 
             _logger.LogInformation(
                 "Starting S3 bucket initialization service started. Required buckets: {Buckets}",
-                string.Join(", ", _s3Options.RequiredBuckets));
+                string.Join(", ", _fileStorageOptions.RequiredBuckets));
 
-            Task[] tasks = _s3Options.RequiredBuckets
+            Task[] tasks = _fileStorageOptions.RequiredBuckets
                 .Select(bucketName => InitializeBucketAsync(bucketName, cancellationToken))
                 .ToArray();
 

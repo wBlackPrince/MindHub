@@ -26,7 +26,7 @@ public sealed class GetMediaAsset: IEndpoint
 
 public sealed class GetMediaAssetHandler(
     IReadDbContext readDbContext,
-    IS3Provider s3Provider,
+    FileStorageProvider fileStorageProvider,
     ILogger<StartMultiPartUploadHandler> logger)
 {
     public async Task<Result<GetMediaAssetDto?, Error>> Handle(
@@ -44,7 +44,7 @@ public sealed class GetMediaAssetHandler(
 
         if (mediaAsset.Status == MediaStatus.READY)
         {
-            (_, bool isFailure, string presignedUrl, Error? error) = await s3Provider.GenerateDownloadUrlAsync(mediaAsset.Key, cancellationToken);
+            (_, bool isFailure, string presignedUrl, Error? error) = await fileStorageProvider.GenerateDownloadUrlAsync(mediaAsset.Key, cancellationToken);
 
             if (isFailure)
                 return error;

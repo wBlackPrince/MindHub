@@ -26,7 +26,7 @@ public sealed class CompleteMultipartUpload: IEndpoint
 public sealed class CompleteMultiPartUploadHandler(
     ILogger<CompleteMultiPartUploadHandler> logger,
     IMediaAssetsRepository mediaAssetsRepository,
-    IS3Provider s3Provider)
+    FileStorageProvider fileStorageProvider)
 {
     public async Task<UnitResult<Error>> Handle(
         CompleteMultipartUploadRequest request,
@@ -42,7 +42,7 @@ public sealed class CompleteMultiPartUploadHandler(
         if (mediaAsset.MediaData.ExpectedChunksCount != request.PartETagDtos.Count)
             return GeneralErrors.Failure("Количество eTags не соответствует количеству чанков");
 
-        Result<string, Error> completedResult = await s3Provider.CompleteMultiPartUploadAsync(
+        Result<string, Error> completedResult = await fileStorageProvider.CompleteMultiPartUploadAsync(
             mediaAsset.Key,
             request.UploadId,
             request.PartETagDtos,

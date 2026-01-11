@@ -28,7 +28,7 @@ public sealed class StartMultiPartUploadHandler(
     ILogger<StartMultiPartUploadHandler> logger,
     IChunkSizeCalculator chunkSizeCalculator,
     IMediaAssetsRepository mediaAssetsRepository,
-    IS3Provider s3Provider)
+    FileStorageProvider fileStorageProvider)
 {
     public async Task<Result<StartMultipartUploadResponse, Error>> Handle(
         StartMultipartUploadRequest request,
@@ -79,7 +79,7 @@ public sealed class StartMultiPartUploadHandler(
 
         // начать multipart-загрузку
 
-        Result<string, Error> startUploadResult = await s3Provider.StartMultipartUploadAsync(
+        Result<string, Error> startUploadResult = await fileStorageProvider.StartMultipartUploadAsync(
             mediaAssetResult.Value.Key,
             mediaAssetResult.Value.MediaData,
             cancellationToken);
@@ -90,7 +90,7 @@ public sealed class StartMultiPartUploadHandler(
 
         // сгенерировать коллекцию upload-url для чанков
 
-        Result<IReadOnlyList<ChunkUploadUrl>, Error> chunkUploadUrlsResult = await s3Provider.GenerateAllChunksUploadUrlsAsync(
+        Result<IReadOnlyList<ChunkUploadUrl>, Error> chunkUploadUrlsResult = await fileStorageProvider.GenerateAllChunksUploadUrlsAsync(
             mediaAssetResult.Value.Key,
             startUploadResult.Value,
             chunkCalculationResult.Value.TotalChunks,

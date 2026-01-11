@@ -90,7 +90,7 @@ public class IntegrationTestsWebFactory: WebApplicationFactory<Program>, IAsyncL
 
             services.AddSingleton<IAmazonS3>(sp =>
             {
-                var s3Options = sp.GetRequiredService<IOptions<S3Options>>().Value;
+                var s3Options = sp.GetRequiredService<IOptions<FileStorageOptions>>().Value;
 
                 var port = _minioContainer.GetMappedPublicPort(9000);
 

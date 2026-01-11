@@ -6,7 +6,7 @@ using Shared.SharedKernel;
 
 namespace FileService.Core.FilesStorage;
 
-public interface IS3Provider
+public interface FileStorageProvider
 {
     Task<Result<string, Error>> StartMultipartUploadAsync(
         StorageKey storageKey,
