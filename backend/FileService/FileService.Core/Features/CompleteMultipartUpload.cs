@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FileService.Contracts;
+using FileService.Contracts.Dtos;
 using FileService.Core.FilesStorage;
 using FileService.Domain.Assets;
 using Framework.Endpoints;
@@ -26,7 +27,7 @@ public sealed class CompleteMultipartUpload: IEndpoint
 public sealed class CompleteMultiPartUploadHandler(
     ILogger<CompleteMultiPartUploadHandler> logger,
     IMediaAssetsRepository mediaAssetsRepository,
-    FileStorageProvider fileStorageProvider)
+    IFileStorageProvider fileStorageProvider)
 {
     public async Task<UnitResult<Error>> Handle(
         CompleteMultipartUploadRequest request,

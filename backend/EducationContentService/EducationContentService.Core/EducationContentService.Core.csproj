@@ -14,6 +14,7 @@
     <ItemGroup>
       <PackageReference Include="Dapper" />
       <PackageReference Include="EduardNikitin.Core" />
+      <PackageReference Include="EduardNikitin.FileService.Communication" />
       <PackageReference Include="EduardNikitin.Framework" />
       <PackageReference Include="FluentValidation" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />

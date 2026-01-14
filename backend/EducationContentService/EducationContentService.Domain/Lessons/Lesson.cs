@@ -7,7 +7,8 @@ public sealed class Lesson
     public Lesson(
         Guid? id,
         Title title,
-        Description description)
+        Description description,
+        Guid videoId)
     {
         Id = id ?? Guid.NewGuid();
         Title = title;
@@ -16,6 +17,7 @@ public sealed class Lesson
         UpdatedAt = CreatedAt;
         IsDeleted = false;
         DeletedAt = null;
+        VideoId = videoId;
     }
 
     // Ef Core
@@ -30,7 +32,7 @@ public sealed class Lesson
     public Description Description { get; private set; } = null!;
 
     public Guid VideoId { get; private set; }
-    
+
     public Guid PreviewId { get; private set; }
 
     public DateTime CreatedAt { get; private set; }

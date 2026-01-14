@@ -1,8 +1,11 @@
-﻿using Core.Validation;
+﻿using System.Net.Http.Json;
+using Core.Validation;
 using CSharpFunctionalExtensions;
 using EducationContentService.Contracts;
 using EducationContentService.Core.Database;
 using EducationContentService.Domain.Lessons;
+using FileService.Contracts;
+using FileService.Contracts.Dtos;
 using FluentValidation;
 using FluentValidation.Results;
 using Framework.Endpoints;
@@ -46,6 +49,7 @@ public sealed class GetEndpoint: IEndpoint
 
 public sealed class GetHandler(
     IEducationReadDbContext dbContext,
+    IFileCommunicationService fileCommunicationService,
     IValidator<GetLessonRequest> requestValidator)
 {
     public async Task<Result<PaginationLessonResponse, Error>> Handle(
@@ -76,10 +80,42 @@ public sealed class GetHandler(
                 Description = l.Description.Value,
                 CreatedAt = l.CreatedAt,
                 UpdatedAt = l.UpdatedAt,
+                Video = new MediaDto
+                {
+                    Id = l.Id
+                }
             })
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
             .ToListAsync(cancellationToken);
+
+        List<Guid> mediaAssetIds = lessons
+            .Where(l => l.Video.Id != null)
+            .Select(l => l.Video!.Id!.Value)
+            .ToList();
+
+        Result<GetMediaAssetsResponse, Error> fileMediaAssets = await fileCommunicationService.GetMediaAssets(
+            new GetMediaAssetsRequest(mediaAssetIds),
+            cancellationToken);
+
+        if (fileMediaAssets.IsFailure)
+            return fileMediaAssets.Error;
+
+        Dictionary<Guid, GetMediaAssetsDto> mediaAssetsDict = fileMediaAssets.Value.MediaAssets
+            .ToDictionary(ma => ma.Id, ma => ma);
+
+        foreach (LessonDto lesson in lessons)
+        {
+            if (lesson.Video != null && mediaAssetsDict.TryGetValue(lesson.Video.Id.Value, out GetMediaAssetsDto? mediaAsset))
+            {
+                lesson.Video = new MediaDto()
+                {
+                    Id = mediaAsset.Id,
+                    Url = mediaAsset.Url,
+                    Status = mediaAsset.Status,
+                };
+            }
+        }
 
         return new PaginationLessonResponse(lessons, lessonsCount);
     }

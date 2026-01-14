@@ -1,12 +1,13 @@
 ﻿using CSharpFunctionalExtensions;
 using FileService.Contracts;
+using FileService.Contracts.Dtos;
 using FileService.Core.Models;
 using FileService.Domain;
 using Shared.SharedKernel;
 
 namespace FileService.Core.FilesStorage;
 
-public interface FileStorageProvider
+public interface IFileStorageProvider
 {
     Task<Result<string, Error>> StartMultipartUploadAsync(
         StorageKey storageKey,

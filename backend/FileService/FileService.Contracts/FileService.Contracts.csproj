@@ -1,9 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
+      <PackageId>EduardNikitin.FileService.Communication</PackageId>
+      <Version>0.0.2</Version>
+      <Authors>EduardNikitin</Authors>
+      <Company>EduardNikitin</Company>
+      <PackageDescription>Communication FileService project</PackageDescription>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CSharpFunctionalExtensions" />
+      <PackageReference Include="EduardNikitin.SharedKernel" />
+      <PackageReference Include="Microsoft.Extensions.Http" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    </ItemGroup>
 
 </Project>

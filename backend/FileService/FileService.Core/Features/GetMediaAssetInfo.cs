@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FileService.Contracts;
+using FileService.Contracts.Dtos;
 using FileService.Core.FilesStorage;
 using FileService.Domain;
 using FileService.Domain.Assets;
@@ -26,7 +27,7 @@ public sealed class GetMediaAsset: IEndpoint
 
 public sealed class GetMediaAssetHandler(
     IReadDbContext readDbContext,
-    FileStorageProvider fileStorageProvider,
+    IFileStorageProvider fileStorageProvider,
     ILogger<StartMultiPartUploadHandler> logger)
 {
     public async Task<Result<GetMediaAssetDto?, Error>> Handle(

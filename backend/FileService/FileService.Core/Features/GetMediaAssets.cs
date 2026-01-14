@@ -1,6 +1,5 @@
-﻿using System.Security.Cryptography;
-using CSharpFunctionalExtensions;
-using FileService.Contracts;
+﻿using CSharpFunctionalExtensions;
+using FileService.Contracts.Dtos;
 using FileService.Core.FilesStorage;
 using FileService.Domain;
 using FileService.Domain.Assets;
@@ -8,7 +7,6 @@ using Framework.Endpoints;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using Shared.SharedKernel;
@@ -28,7 +26,7 @@ public sealed class GetMediaAssets: IEndpoint
 
 public sealed class GetMediaAssetsHandler(
     IReadDbContext readDbContext,
-    FileStorageProvider fileStorageProvider,
+    IFileStorageProvider fileStorageProvider,
     HybridCache cache,
     FileStorageOptions fileStorageOptions,
     ILogger<StartMultiPartUploadHandler> logger)

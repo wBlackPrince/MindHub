@@ -2,6 +2,7 @@ using Amazon.S3;
 using Amazon.S3.Model;
 using CSharpFunctionalExtensions;
 using FileService.Contracts;
+using FileService.Contracts.Dtos;
 using FileService.Core.FilesStorage;
 using FileService.Core.Models;
 using FileService.Domain;
@@ -12,7 +13,7 @@ using CompleteMultipartUploadRequest = Amazon.S3.Model.CompleteMultipartUploadRe
 
 namespace FileService.Infrastructure.S3;
 
-public class FileStorageProvider: IDisposable, FileStorageProvider
+public class FileStorageProvider: IDisposable, IFileStorageProvider
 {
     private readonly IAmazonS3 _s3Client;
     private readonly FileStorageOptions _fileStorageOptions;

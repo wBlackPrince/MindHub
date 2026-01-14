@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FileService.Contracts;
+using FileService.Contracts.Dtos;
 using FileService.Core.FilesStorage;
 using FileService.Domain;
 using FileService.Domain.Assets;
@@ -28,7 +29,7 @@ public sealed class StartMultiPartUploadHandler(
     ILogger<StartMultiPartUploadHandler> logger,
     IChunkSizeCalculator chunkSizeCalculator,
     IMediaAssetsRepository mediaAssetsRepository,
-    FileStorageProvider fileStorageProvider)
+    IFileStorageProvider fileStorageProvider)
 {
     public async Task<Result<StartMultipartUploadResponse, Error>> Handle(
         StartMultipartUploadRequest request,

@@ -60,7 +60,8 @@ public sealed class CreateHandler(
         Lesson lesson = new Lesson(
             Guid.NewGuid(),
             title,
-            description);
+            description,
+            request.VideoId);
 
         Result<Guid, Error> result = await lessonsRepository.AddAsync(lesson, cancellationToken);
 

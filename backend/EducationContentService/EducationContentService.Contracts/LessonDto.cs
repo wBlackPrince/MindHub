@@ -8,6 +8,8 @@ public record LessonDto
 
     public string Description { get; init; } = string.Empty;
 
+    public MediaDto Video { get; set; } = null!;
+
     public DateTime CreatedAt { get; init; }
 
     public DateTime UpdatedAt { get; init; }

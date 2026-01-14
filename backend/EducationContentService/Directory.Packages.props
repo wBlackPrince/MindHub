@@ -6,6 +6,7 @@
     <PackageVersion Include="CSharpFunctionalExtensions" Version="3.6.0" />
     <PackageVersion Include="Dapper" Version="2.1.66" />
     <PackageVersion Include="EduardNikitin.Core" Version="0.0.1" />
+    <PackageVersion Include="EduardNikitin.FileService.Communication" Version="0.0.2" />
     <PackageVersion Include="EduardNikitin.Framework" Version="0.0.3" />
     <PackageVersion Include="EduardNikitin.SharedKernel" Version="0.0.1" />
     <PackageVersion Include="FluentValidation" Version="12.1.0" />

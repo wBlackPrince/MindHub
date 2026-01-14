@@ -49,22 +49,22 @@ public static class HttpResponseMessageExtensions
     {
         try
         {
-            Envelope? startMultipartUploadResponse = await response.Content
+            Envelope? jsonResponse = await response.Content
                 .ReadFromJsonAsync<Envelope>(cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
-                return startMultipartUploadResponse?.Error ?? GeneralErrors.Failure("Error while reading response");
+                return jsonResponse?.Error ?? GeneralErrors.Failure("Error while reading response");
             }
 
-            if (startMultipartUploadResponse is null)
+            if (jsonResponse is null)
             {
                 return GeneralErrors.Failure("Error while reading response");
             }
 
-            if (startMultipartUploadResponse.Error is not null)
+            if (jsonResponse.Error is not null)
             {
-                return startMultipartUploadResponse.Error;
+                return jsonResponse.Error;
             }
 
             return UnitResult.Success<Error>();
