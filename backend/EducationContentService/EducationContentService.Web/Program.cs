@@ -36,3 +36,8 @@ finally
 {
     await Log.CloseAndFlushAsync(); // ensure all logs written before app exits
 }
+
+namespace EducationContentService.Web
+{
+    public partial class Program;
+}

@@ -18,7 +18,7 @@ using Shared.SharedKernel;
 
 namespace EducationContentService.Core.Features.Lessons;
 
-public class GetLessonRequestValidator : AbstractValidator<GetLessonRequest>
+public class GetLessonRequestValidator : AbstractValidator<GetLessonsRequest>
 {
     public GetLessonRequestValidator()
     {
@@ -41,7 +41,7 @@ public sealed class GetEndpoint: IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("lessons", async Task<EndpointResult<PaginationLessonResponse>>(
-            [AsParameters] GetLessonRequest request,
+            [AsParameters] GetLessonsRequest request,
             [FromServices] GetHandler handler,
             CancellationToken cancellationToken) => await handler.Handle(request, cancellationToken));
     }
@@ -50,10 +50,10 @@ public sealed class GetEndpoint: IEndpoint
 public sealed class GetHandler(
     IEducationReadDbContext dbContext,
     IFileCommunicationService fileCommunicationService,
-    IValidator<GetLessonRequest> requestValidator)
+    IValidator<GetLessonsRequest> requestValidator)
 {
     public async Task<Result<PaginationLessonResponse, Error>> Handle(
-        GetLessonRequest request,
+        GetLessonsRequest request,
         CancellationToken cancellationToken)
     {
         ValidationResult validationResult = await requestValidator.ValidateAsync(request, cancellationToken);
